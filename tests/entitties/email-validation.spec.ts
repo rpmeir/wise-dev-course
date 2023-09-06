@@ -57,4 +57,9 @@ describe('Email validation', () => {
         expect(Email.validate(email)).toBeFalsy();
     });
 
+    test('Should not accept local part with ending dot', () => {
+        const email: string  = 'any.@mail.com';
+        expect(Email.validate(email)).toBeFalsy();
+    });
+
 });
