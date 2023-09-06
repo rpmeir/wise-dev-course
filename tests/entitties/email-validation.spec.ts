@@ -62,4 +62,9 @@ describe('Email validation', () => {
         expect(Email.validate(email)).toBeFalsy();
     });
 
+    test('Should not accept email whithout an at-sign', () => {
+        const email: string  = 'anymail.com';
+        expect(Email.validate(email)).toBeFalsy();
+    });
+
 });
