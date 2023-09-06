@@ -3,13 +3,13 @@ import { InvalidEmailError } from "./errors/invalid-email-error";
 
 export class Email {
 
-    private readonly email: string;
+    private readonly value: string;
 
-    constructor (email: string) {
-        this.email = email;
+    private constructor (email: string) {
+        this.value = email;
     }
 
-    static create(email: string): Either<InvalidEmailError, Email> {
+    public static create(email: string): Either<InvalidEmailError, Email> {
         if(Email.validate(email)) {
             return right(new Email(email));
         }
@@ -17,7 +17,7 @@ export class Email {
         return left(new InvalidEmailError());
     }
 
-    static validate(email: string): boolean {
+    public static validate(email: string): boolean {
         if(!email) {
             return false;
         }
