@@ -13,7 +13,6 @@ export class Email {
         if(Email.validate(email)) {
             return right(new Email(email));
         }
-
         return left(new InvalidEmailError());
     }
 
