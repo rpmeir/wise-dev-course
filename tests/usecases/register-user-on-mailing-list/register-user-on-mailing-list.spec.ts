@@ -1,10 +1,7 @@
 import { UserRepository } from "../../../src/usecases/register-user-on-mailing-list/ports/user-repository";
-import { InMemoryUserRepository } from "../../../src/usecases/register-user-on-mailing-list/repository/in-memory-user-repository";
+import { InMemoryUserRepository } from "./repository/in-memory-user-repository";
 import { UserData } from "../../../src/entities/user-data";
 import { RegisterUserOnMailingList } from "../../../src/usecases/register-user-on-mailing-list/register-user-on-mailing-list";
-import { left } from "../../../src/shared/either";
-import { InvalidEmailError } from "../../../src/entities/errors/invalid-email-error";
-import { InvalidNameError } from "../../../src/entities/errors/invalid-name-error";
 
 describe('Register user on mailing list use case', () =>{
 
@@ -26,10 +23,10 @@ describe('Register user on mailing list use case', () =>{
         const usecase: RegisterUserOnMailingList = new RegisterUserOnMailingList(repo);
         const name = 'User Name';
         const invalidEmail = ' useremail.com';
-        const response = await usecase.registerUserOnMailingList({name: name, email: invalidEmail});
+        const response = (await usecase.registerUserOnMailingList({name: name, email: invalidEmail})).value as Error;
         const user = await repo.findUserByEmail(invalidEmail);
         expect(user).toBeNull();
-        expect(response).toEqual(left(new InvalidEmailError()));
+        expect(response.name).toEqual('InvalidEmailError');
     });
 
     test('Should not add if invalid name', async () => {
@@ -38,10 +35,10 @@ describe('Register user on mailing list use case', () =>{
         const usecase: RegisterUserOnMailingList = new RegisterUserOnMailingList(repo);
         const name = '';
         const email = ' user@email.com';
-        const response = await usecase.registerUserOnMailingList({name: name, email: email});
+        const response = (await usecase.registerUserOnMailingList({name: name, email: email})).value as Error;
         const user = await repo.findUserByEmail(email);
         expect(user).toBeNull();
-        expect(response).toEqual(left(new InvalidNameError()));
+        expect(response.name).toEqual('InvalidNameError');
     });
 
 });
